@@ -1,0 +1,73 @@
+import { useState } from 'react';
+import { Button } from "/components/ui/button";
+import { Input } from "/components/ui/input";
+import { Label } from "/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "/components/ui/card";
+
+const questions = [
+  { id: 1, question: 'What is the most popular social media platform?', options: ['Instagram', 'TikTok', 'Facebook', 'Twitter'], answer: 'TikTok' },
+  { id: 2, question: 'Who is the most followed person on TikTok?', options: ['Charli D\'Amelio', 'Addison Rae', 'Zach King', 'Dixie D\'Amelio'], answer: 'Charli D\'Amelio' },
+  { id: 3, question: 'What is the name of the popular TikTok challenge?', options: ['Renegade', 'Floss', 'Dab', 'Hit or Miss'], answer: 'Renegade' },
+];
+
+const TikTokGameApp = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleOptionChange = (option: string) => {
+    setSelectedOption(option);
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedOption === questions[currentQuestion].answer) {
+      setScore(score + 1);
+    }
+    setCurrentQuestion(currentQuestion + 1);
+    setSelectedOption('');
+  };
+
+  const handleRestartGame = () => {
+    setCurrentQuestion(0);
+    setScore(0);
+    setSelectedOption('');
+  };
+
+  return (
+    <div className="max-w-md mx-auto p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>TikTok Game App</CardTitle>
+          <CardDescription>Test your knowledge about TikTok!</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {currentQuestion < questions.length ? (
+            <div>
+              <p className="text-lg font-bold">{questions[currentQuestion].question}</p>
+              <div className="flex flex-col space-y-2">
+                {questions[currentQuestion].options.map((option, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input type="radio" id={option} name="option" value={option} checked={selectedOption === option} onChange={() => handleOptionChange(option)} />
+                    <Label htmlFor={option}>{option}</Label>
+                  </div>
+                ))}
+              </div>
+              <Button variant="primary" onClick={handleNextQuestion}>Next Question</Button>
+            </div>
+          ) : (
+            <div>
+              <p className="text-lg font-bold">Game Over!</p>
+              <p>Your final score is: {score} / {questions.length}</p>
+              <Button variant="primary" onClick={handleRestartGame}>Restart Game</Button>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter>
+          <p>Current Score: {score}</p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
+export default TikTokGameApp;
